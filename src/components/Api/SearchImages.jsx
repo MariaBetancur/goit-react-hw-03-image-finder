@@ -6,7 +6,7 @@ export const searchImages = async (searchTerm, setState, pageNumber = 1) => {
       params: {
         q: searchTerm,
         page: pageNumber,
-        key: '36787252-5c3b11e3b9a6e8386f9bae3e3',
+        key: '37145039-d4ad8d6ab2b85cf5d231e1aa0',
         image_type: 'photo',
         orientation: 'horizontal',
         per_page: 20,
