@@ -7,8 +7,13 @@ import { SearchForInput } from './StyledComponents/SearchBar';
 import PropTypes from 'prop-types';
 
 export class Searcher extends Component {
+  handleChangeImageName = e => {
+    e.preventDefault();
+    const { value } = e.target;
+    this.props.onChangeImageName(value);
+  };
   render() {
-    const { onChangeImageName, onSubmit, imageName } = this.props;
+    const { onSubmit, imageName } = this.props;
 
     return (
       <SearchbarStyled className="searchbar">
@@ -26,7 +31,7 @@ export class Searcher extends Component {
             autoFocus
             placeholder="Search images and photos"
             value={imageName}
-            onChange={onChangeImageName}
+            onChange={this.handleChangeImageName}
           />
         </SearchFormStyled>
       </SearchbarStyled>

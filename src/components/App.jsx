@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import { fetchImages } from './Api/api';
+// import { fetchImages } from './Api/api';
 import { Searcher } from './SearchBar';
 import { ImageGallery } from './ImageGallery';
-import { searchImages } from './Api/SearchImages';
+import { searchImages } from './Api/api';
 import { ButtonLoadMore } from './Button';
 import { Load } from './Loader';
 
 export class App extends Component {
   state = {
+    allImages: [],
     images: [],
     loading: true,
     error: null,
@@ -16,28 +17,21 @@ export class App extends Component {
     loadingMore: false,
   };
 
-  async componentDidMount() {
-    try {
-      const images = await fetchImages();
-      this.setState({ images, loading: false });
-    } catch (error) {
-      this.setState({ error, loading: false });
-    }
-  }
-
-  handleChangeImageName = e => {
-    e.preventDefault();
-    const { value } = e.target;
-    this.setState({ imageName: value });
+  handleChangeImageName2 = searchValue => {
+    this.setState({ imageName: searchValue });
   };
-
   onSubmit = async e => {
     e.preventDefault();
-    const { imageName } = this.state;
+    const { imageName, pageNumber } = this.state;
 
     console.log(imageName);
 
-    await searchImages(imageName, this.setState.bind(this));
+    const newImages = await searchImages(imageName, pageNumber);
+
+    this.setState(prevState => ({
+      allImages: [...prevState.allImages, ...newImages],
+      images: newImages,
+    }));
   };
 
   LoadMorePics = async e => {
@@ -47,9 +41,11 @@ export class App extends Component {
 
     this.setState({ loadingMore: true });
 
-    await searchImages(imageName, this.setState.bind(this), nextPageNumber);
+    const newImages = await searchImages(imageName, nextPageNumber);
 
     this.setState(prevState => ({
+      allImages: [...prevState.allImages, ...newImages],
+      images: newImages,
       pageNumber: prevState.pageNumber + 1,
       loadingMore: false,
     }));
@@ -70,16 +66,16 @@ export class App extends Component {
   };
 
   render() {
-    const { images, imageName } = this.state;
+    const { allImages, imageName } = this.state;
     return (
       <div>
         <Searcher
           imageName={imageName}
-          onChangeImageName={this.handleChangeImageName}
+          onChangeImageName={this.handleChangeImageName2}
           onSubmit={this.onSubmit}
         />
 
-        <ImageGallery images={images} />
+        <ImageGallery images={allImages} />
 
         <ButtonLoadMore onLoadPics={this.LoadMorePics} />
 
@@ -88,6 +84,7 @@ export class App extends Component {
     );
   }
 }
+
 // export const App = () => {
 //   return (
 //     <div
