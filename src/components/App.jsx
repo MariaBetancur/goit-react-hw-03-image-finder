@@ -66,7 +66,11 @@ export class App extends Component {
   };
 
   render() {
-    const { allImages, imageName } = this.state;
+    const { allImages, imageName, loadingMore } = this.state;
+
+    // Check if there are images to load
+    const canLoadMore = allImages.length > 0;
+
     return (
       <div>
         <Searcher
@@ -77,13 +81,34 @@ export class App extends Component {
 
         <ImageGallery images={allImages} />
 
-        <ButtonLoadMore onLoadPics={this.LoadMorePics} />
+        {/* Show the "LoadMore" button only if there are images to load */}
+        {canLoadMore && <ButtonLoadMore onLoadPics={this.LoadMorePics} />}
 
-        <Load onLoader={this.loader} loadingMore={this.state.loadingMore} />
+        <Load onLoader={this.loader} loadingMore={loadingMore} />
       </div>
     );
   }
 }
+
+//   render() {
+//     const { allImages, imageName } = this.state;
+//     return (
+//       <div>
+//         <Searcher
+//           imageName={imageName}
+//           onChangeImageName={this.handleChangeImageName2}
+//           onSubmit={this.onSubmit}
+//         />
+
+//         <ImageGallery images={allImages} />
+
+//         <ButtonLoadMore onLoadPics={this.LoadMorePics} />
+
+//         <Load onLoader={this.loader} loadingMore={this.state.loadingMore} />
+//       </div>
+//     );
+//   }
+// }
 
 // export const App = () => {
 //   return (
